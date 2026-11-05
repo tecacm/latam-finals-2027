@@ -13,7 +13,7 @@ export default function HeroSection() {
   const postcard = getPostcard(hero.postcardId);
   return (
     <Section id="home" labelledBy="home-title">
-      <Box sx={{ position: 'relative', textAlign: 'center', px: 2, maxWidth: 1100, mx: 'auto' }}>
+      <Box sx={{ position: 'relative', textAlign: 'center', px: 2, pt: { xs: 7, sm: 0 }, maxWidth: 1100, mx: 'auto' }}>
         <BalloonCluster colors={icpcColors} />
         <Typography
           component="p"
