@@ -35,6 +35,16 @@ describe('ColorAccordion', () => {
     expect(first).toHaveAttribute('aria-expanded', 'false');
   });
 
+  it('points every header at exactly one panel element', () => {
+    render(<ColorAccordion items={items} colors={icpcColors} />);
+    for (const item of items) {
+      const header = screen.getByRole('button', { name: item.title });
+      const controls = header.getAttribute('aria-controls');
+      expect(controls).toBe(`${item.id}-content`);
+      expect(document.querySelectorAll(`[id="${controls}"]`)).toHaveLength(1);
+    }
+  });
+
   it('opens with the keyboard', async () => {
     const user = userEvent.setup();
     render(<ColorAccordion items={items} colors={icpcColors} />);

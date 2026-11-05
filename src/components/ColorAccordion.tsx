@@ -50,7 +50,7 @@ export default function ColorAccordion({ items, colors }: ColorAccordionProps) {
                 {item.title}
               </Typography>
             </AccordionSummary>
-            <AccordionDetails id={`${item.id}-content`} sx={{ backgroundColor: tokens.white, pt: 2 }}>
+            <AccordionDetails sx={{ backgroundColor: tokens.white, pt: 2 }}>
               {item.body}
             </AccordionDetails>
           </Accordion>
