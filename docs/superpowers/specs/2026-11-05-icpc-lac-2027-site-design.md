@@ -54,13 +54,19 @@ Chosen in the visual companion: **Layout A "Postcard journey"**, **Paper** mood,
 | `blue`    | `#1F5AA6` | ICPC blue (approx.) — About accents, primary buttons        |
 | `red`     | `#CF3B2A` | ICPC red (approx.) — Rules accents, wordmark "LAC"          |
 | `yellow`  | `#F0B323` | ICPC yellow (approx.) — accents; dark text on top of it     |
-| `green`   | `#3A9A4A` | ICPC green (approx.) — accents                              |
+| `green`   | `#2E7D3A` | ICPC green (approx.) — accents; darkened so cream text on it passes WCAG AA (4.9:1) |
+| `yellowText` | `#A87A00` | Yellow used as large text (countdown digit) — 3.7:1 on paper |
 | `teal`    | `#387072` | Eyebrows, countdown labels (taken from the postcards)       |
 | `bodyText`| `#24323F` | Long-form paragraph text                                   |
 
 `yellow` text on `paper` fails contrast; yellow is only used as a fill (with
-`ink` text on it) or for large decorative elements. A darker `#C99300` is used
-when yellow must be text (countdown digit).
+`ink` text on it) or for large decorative elements. `yellowText` is used when
+yellow must be text (countdown digit). A unit test pins every text/fill pair:
+≥ 4.5:1 for normal text, ≥ 3:1 for large text.
+
+Derived lists: `icpcColors` = blue, red, yellow, green (fills, stripes,
+balloons); `textAccents` = blue, red, green (colored headings);
+`countdownColors` = blue, red, yellowText, green.
 
 ### Typography
 
@@ -123,13 +129,18 @@ site/
       about.ts                 # About blocks
       rules.ts                 # Rules intro + accordion entries
       nav.ts                   # nav items (label → section id)
+      hero.ts                  # hero eyebrow + hero postcard id
+      footer.ts                # footer copyright + links
     hooks/
       useActiveSection.ts      # which section id is in view (for nav highlight)
       usePrefersReducedMotion.ts
     lib/
       countdown.ts             # pure time-left math
+      contrast.ts              # WCAG contrast + readable text color for a fill
+      withBase.ts              # prefix public asset paths with Vite BASE_URL
+    theme/layout.ts            # HEADER_HEIGHT shared by header, sections, scroll spy
     components/                # reusable, content-agnostic building blocks
-      AnimateOnView.tsx        # from HackMTY; respects reduced motion
+      AnimateOnView.tsx        # HackMTY's useInView pattern; CSS transitions; respects reduced motion
       Countdown.tsx            # from HackMTY; null target → "Date to be announced"
       Postcard.tsx
       Postmark.tsx
@@ -139,6 +150,8 @@ site/
       ColorSegmentBar.tsx
       Section.tsx
       SectionHeading.tsx
+      ProseBlock.tsx           # optional title + paragraphs + optional bullets
+      Wordmark.tsx             # "ICPC LAC 2027" text logo with colored accent
       PostcardRow.tsx
       ColorAccordion.tsx       # adapted from HackMTY ControlledAccordions
       SiteHeader.tsx
@@ -154,8 +167,9 @@ site/
       setup.ts                 # jest-dom matchers, IntersectionObserver/matchMedia stubs
 ```
 
-Rule of thumb: `components/` never import from `content/`; `sections/` are the
-only place content and components meet. This keeps every component reusable
+Rule of thumb: `components/` never import content *data* from `content/`
+(`import type` from `content/types.ts` is allowed); `sections/` and `App.tsx`
+are the only places content and components meet. This keeps every component reusable
 and testable with plain props.
 
 ### Component contracts
@@ -176,7 +190,9 @@ and testable with plain props.
 | `SiteHeader` | `items: NavItem[]`, `activeId?: string` | Sticky header: wordmark, anchor links, `ColorSegmentBar`; renders `MobileNavMenu` below `md`. |
 | `MobileNavMenu` | `items: NavItem[]`, `activeId?: string` | MUI `IconButton` + `Menu` (HackMTY pattern). |
 | `Footer` | `copyright: string`, `links?: { label, href }[]` | Ink-colored footer preceded by an `AirmailStripe`. |
-| `AnimateOnView` | as HackMTY | Mounts MUI transition when in view; renders children immediately under reduced motion. |
+| `AnimateOnView` | `variant: 'fade' \| 'rise' \| 'slide-from-left' \| 'slide-from-right'`, `timeout?`, `threshold?` | HackMTY's `useInView({ triggerOnce })` pattern, but a short CSS opacity/translate transition instead of MUI `Slide` (which translates by the full window width and causes horizontal overflow). Renders children with no wrapper styles under reduced motion; `fallbackInView: true` so content is visible without IntersectionObserver. |
+| `ProseBlock` | `title?`, `titleColor?`, `paragraphs: string[]`, `bullets?: string[]` | Typography for a content block (h3 title, paragraphs, list). |
+| `Wordmark` | `prefix`, `accent`, `suffix`, `accentColor?` | Text logo used in the header. |
 
 ### Content types
 
@@ -186,6 +202,8 @@ type PostcardData = {
   alt: string;           // descriptive alt text
   place: string;         // e.g. "Parque Fundidora"
   orientation: 'landscape' | 'portrait';
+  width: number;         // intrinsic SVG viewBox width (for width/height attrs → no layout shift)
+  height: number;        // intrinsic SVG viewBox height
 };
 
 type ContentBlock = {
@@ -238,7 +256,8 @@ yet known render the literal string `TBD`.
   1. What is the ICPC — Rectoría postcard.
   2. The Latin America Championship — Fundidora postcard.
   3. Monterrey 2027 — host/venue TBD; text-only until the next postcard arrives.
-- **Rules (`#rules`, red tint)** — intro paragraph + `ColorAccordion` entries:
+- **Rules (`#rules`, red tint)** — one `PostcardRow` (text-only until a postcard
+  is assigned via `rules.postcardId`) holding the intro paragraph + `ColorAccordion` entries:
   regional structure; advancing to the championship; advancing to the World
   Finals; prizes; unforeseen cases. All counts/slots `TBD`. Link to official
   ICPC regional rules (`event.links.regionalRules`).
