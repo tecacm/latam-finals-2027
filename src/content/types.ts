@@ -41,7 +41,7 @@ export type EventInfo = {
   links: { icpc: string; regionalRules: string };
 };
 
-export type HeroContent = { eyebrow: string; postcardId: string };
+export type HeroContent = { eyebrow: string; datesLabel: string; postcardId: string };
 
 export type AboutContent = { eyebrow: string; heading: string; blocks: ContentBlock[] };
 

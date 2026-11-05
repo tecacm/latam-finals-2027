@@ -13,13 +13,13 @@ export default function HeroSection() {
   const postcard = getPostcard(hero.postcardId);
   return (
     <Section id="home" labelledBy="home-title">
-      <Box sx={{ position: 'relative', textAlign: 'center', px: 2, pt: { xs: 7, sm: 0 }, maxWidth: 1100, mx: 'auto' }}>
+      <Box sx={{ position: 'relative', textAlign: 'center', px: 2, pt: { xs: 7, md: 10, lg: 0 }, maxWidth: 1100, mx: 'auto' }}>
         <BalloonCluster colors={icpcColors} />
         <Typography
           component="p"
-          sx={{ fontFamily: fonts.mono, letterSpacing: '0.18em', fontSize: { xs: '0.75rem', md: '0.9rem' }, color: tokens.teal }}
+          sx={{ fontFamily: fonts.mono, letterSpacing: '0.18em', fontSize: { xs: '0.75rem', md: '0.9rem' }, textTransform: 'uppercase', color: tokens.teal }}
         >
-          {hero.eyebrow.toUpperCase()}
+          {hero.eyebrow}
         </Typography>
         <Typography
           id="home-title"
@@ -37,7 +37,7 @@ export default function HeroSection() {
         >
           {event.name}
         </Typography>
-        <Typography sx={{ mt: 2, fontWeight: 600, color: tokens.bodyText }}>Dates: {event.dates}</Typography>
+        <Typography sx={{ mt: 2, fontWeight: 600, color: tokens.bodyText }}>{hero.datesLabel}: {event.dates}</Typography>
         <Box sx={{ mt: { xs: 3, md: 4 }, position: 'relative' }}>
           <Countdown target={event.countdownTarget} />
         </Box>

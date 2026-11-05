@@ -18,7 +18,7 @@ describe('SiteHeader', () => {
   it('links the brand and every nav item to its section', () => {
     render(<SiteHeader brand="ICPC LAC 2027" items={items} activeId="home" />);
     expect(screen.getByRole('link', { name: 'ICPC LAC 2027' })).toHaveAttribute('href', '#home');
-    const nav = screen.getByRole('navigation', { name: 'Main', ...HIDDEN });
+    const nav = screen.getAllByRole('navigation', { name: 'Main', ...HIDDEN })[0];
     expect(within(nav).getByRole('link', { name: 'Home', ...HIDDEN })).toHaveAttribute('href', '#home');
     expect(within(nav).getByRole('link', { name: 'About', ...HIDDEN })).toHaveAttribute('href', '#about');
     expect(within(nav).getByRole('link', { name: 'Rules', ...HIDDEN })).toHaveAttribute('href', '#rules');
@@ -26,7 +26,7 @@ describe('SiteHeader', () => {
 
   it('marks only the active section link as current', () => {
     render(<SiteHeader brand="ICPC LAC 2027" items={items} activeId="about" />);
-    const nav = screen.getByRole('navigation', { name: 'Main', ...HIDDEN });
+    const nav = screen.getAllByRole('navigation', { name: 'Main', ...HIDDEN })[0];
     expect(within(nav).getByRole('link', { name: 'About', ...HIDDEN })).toHaveAttribute('aria-current', 'true');
     expect(within(nav).getByRole('link', { name: 'Home', ...HIDDEN })).not.toHaveAttribute('aria-current');
   });
@@ -42,5 +42,15 @@ describe('SiteHeader', () => {
 
     await user.click(rules);
     await waitFor(() => expect(screen.queryByRole('menu')).not.toBeInTheDocument());
+  });
+
+  it('marks the active section in the mobile menu as current', async () => {
+    const user = userEvent.setup();
+    render(<SiteHeader brand="ICPC LAC 2027" items={items} activeId="about" />);
+
+    await user.click(screen.getByRole('button', { name: 'Open navigation menu' }));
+    const menu = await screen.findByRole('menu');
+    expect(within(menu).getByRole('menuitem', { name: 'About' })).toHaveAttribute('aria-current', 'true');
+    expect(within(menu).getByRole('menuitem', { name: 'Home' })).not.toHaveAttribute('aria-current');
   });
 });

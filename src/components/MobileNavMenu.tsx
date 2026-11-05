@@ -45,6 +45,7 @@ export default function MobileNavMenu({ items, activeId }: MobileNavMenuProps) {
             component="a"
             href={`#${item.sectionId}`}
             onClick={close}
+            aria-current={item.sectionId === activeId ? 'true' : undefined}
             selected={item.sectionId === activeId}
             sx={{
               fontWeight: 700,

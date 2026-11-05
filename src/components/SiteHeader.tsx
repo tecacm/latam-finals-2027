@@ -69,7 +69,7 @@ export default function SiteHeader({ brand, items, activeId }: SiteHeaderProps) 
           </Box>
         </Box>
 
-        <Box sx={{ display: { xs: 'block', md: 'none' } }}>
+        <Box component="nav" aria-label="Main" sx={{ display: { xs: 'block', md: 'none' } }}>
           <MobileNavMenu items={items} activeId={activeId} />
         </Box>
       </Box>
