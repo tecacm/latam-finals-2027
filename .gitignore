@@ -1,0 +1,19 @@
+# Dependencies and build output
+node_modules
+dist
+dist-ssr
+*.local
+
+# Logs
+logs
+*.log
+npm-debug.log*
+
+# Editor / OS
+.vscode/*
+!.vscode/extensions.json
+.idea
+.DS_Store
+
+# Brainstorming companion scratch files
+.superpowers/
