@@ -36,7 +36,7 @@ export default function Balloon({ color, size = 40, delay = 0 }: BalloonProps) {
       style={{ color, animationDelay: `${delay}s` }}
     >
       <ellipse cx="20" cy="20" rx="16" ry="19" fill="currentColor" />
-      <ellipse cx="14" cy="13" rx="4" ry="6" fill="#FFFFFF" opacity="0.35" />
+      <ellipse cx="14" cy="13" rx="4" ry="6" fill={tokens.white} opacity="0.35" />
       <path d="M17 38 l3 4 l3 -4z" fill="currentColor" />
       <path d="M20 42 q-5 8 0 14 t0 14" fill="none" stroke={tokens.ink} strokeWidth="1.2" opacity="0.6" />
     </BalloonSvg>
