@@ -1,7 +1,7 @@
 # ICPC Latin America Championship 2027 — website
 
-Single-page site for the 2027 ICPC Latin America Championship in Monterrey,
-Nuevo León. Built with Vite, React 19, TypeScript and MUI 7 (same stack as the
+Website for the 2027 ICPC Latin America Championship in Monterrey,
+Nuevo León — a home page plus a venue page. Built with Vite, React 19, TypeScript and MUI 7 (same stack as the
 HackMTY site). Design spec: `docs/superpowers/specs/2026-11-05-icpc-lac-2027-site-design.md`.
 
 ## Pages
@@ -64,6 +64,9 @@ to confirm text contrast still passes.
 
 ## Deploying
 
-`npm run build` produces a static `dist/` folder that works on any static host
-with no rewrite rules (it is a single page). If the site is served from a
-sub-path such as `/icpc2027/`, set `base: '/icpc2027/'` in `vite.config.ts`.
+`npm run build` produces a static `dist/` folder. It works on any static host
+with no rewrite rules because the build also writes `dist/venue/index.html`
+(see `scripts/copy-route-html.mjs`). Upload the whole `dist/` folder, not just
+`index.html`. Each new page needs its folder added to `ROUTES` in that script.
+If the site is served from a sub-path such as `/icpc2027/`, set
+`base: '/icpc2027/'` in `vite.config.ts`.
