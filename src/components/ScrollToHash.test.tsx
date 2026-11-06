@@ -89,4 +89,15 @@ describe('ScrollToHash', () => {
     await new Promise((resolve) => setTimeout(resolve, 10));
     expect(scrolled).toEqual([]);
   });
+
+  it('survives a malformed percent-encoded hash', async () => {
+    render(
+      <MemoryRouter initialEntries={['/#%E0%A4%A']}>
+        <Pages />
+      </MemoryRouter>,
+    );
+    await new Promise((resolve) => setTimeout(resolve, 10));
+    expect(screen.getByRole('link', { name: 'to rules' })).toBeInTheDocument();
+    expect(scrolled).toEqual([]);
+  });
 });

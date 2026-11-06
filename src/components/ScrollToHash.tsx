@@ -2,6 +2,15 @@ import { useEffect, useRef } from 'react';
 import { useLocation } from 'react-router-dom';
 import { usePrefersReducedMotion } from '../hooks/usePrefersReducedMotion';
 
+function hashToId(hash: string): string {
+  const raw = hash.slice(1);
+  try {
+    return decodeURIComponent(raw);
+  } catch {
+    return raw;
+  }
+}
+
 /**
  * After each navigation: scroll the `#hash` target into view, or jump to the
  * top when the page changed without a hash (router-aware take on HackMTY's
@@ -17,7 +26,7 @@ export default function ScrollToHash() {
     previousPathname.current = pathname;
 
     if (hash) {
-      const id = decodeURIComponent(hash.slice(1));
+      const id = hashToId(hash);
       // Defer one tick so the destination page has rendered and laid out.
       const timer = setTimeout(() => {
         const target = document.getElementById(id);
