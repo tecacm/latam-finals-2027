@@ -39,7 +39,7 @@ export type EventInfo = {
   venue: string;
   /** ISO 8601 with explicit offset (Z or ±HH:MM), or null while unknown. */
   countdownTarget: string | null;
-  links: { icpc: string; regionalRules: string };
+  links: { icpc: string; regionalRules: string; tec: string };
 };
 
 export type HeroContent = { eyebrow: string; datesLabel: string; postcardId: string };
