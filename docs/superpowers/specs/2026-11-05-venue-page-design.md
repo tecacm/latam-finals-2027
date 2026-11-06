@@ -70,14 +70,14 @@ there still applies unless this addendum overrides it.
 
   | label | id | to |
   |---|---|---|
-  | Home | `home` | `/` |
+  | Home | `home` | `/#home` |
   | About | `about` | `/#about` |
   | Rules | `rules` | `/#rules` |
   | Venue | `venue` | `/venue` |
 
 - `SiteHeader` and `MobileNavMenu` render each item as a React Router `Link`
-  (`component={RouterLink} to={item.to}`). The brand links to `/`. Both stay
-  free of content imports.
+  (`component={RouterLink} to={item.to}`). The brand links to `/#home` (so clicking it — or Home — while already on `/`
+  scrolls back to the top). Both stay free of content imports.
 - New `ScrollToHash` component, a router-aware version of HackMTY's
   `ScrollToElement`, reacts to every location change:
   - If the location has a hash, it scrolls the element with that id into view
@@ -189,7 +189,7 @@ Vitest and Testing Library. Router-dependent tests use `MemoryRouter`.
 - **Navigation:**
   - On `/venue`, the Venue link has `aria-current="true"`.
   - The About link's href is `/#about`.
-  - The brand link's href is `/`.
+  - The brand link's href is `/#home`.
 - **ScrollToHash:**
   - Navigating to `/#rules` calls `scrollIntoView` on `#rules`. jsdom has no
     `scrollIntoView`, so stub it on `Element.prototype`.
