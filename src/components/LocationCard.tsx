@@ -94,7 +94,7 @@ export default function LocationCard({ eyebrow, name, addressLines, coordinates,
           fontWeight: 700,
           textDecoration: 'none',
           '&:hover': { backgroundColor: tokens.ink },
-          '&:focus-visible': { outline: `3px solid ${tokens.yellow}`, outlineOffset: 3 },
+          '&:focus-visible': { outline: `3px solid ${tokens.ink}`, outlineOffset: 3 },
         }}
       >
         {cta.label}
