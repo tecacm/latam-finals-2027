@@ -6,3 +6,11 @@ import { afterEach } from 'vitest';
 afterEach(() => {
   cleanup();
 });
+
+// jsdom does not implement scrolling: scrollIntoView is missing and scrollTo
+// logs "Not implemented". Install silent no-ops; tests spy on them as needed.
+// Guarded because node-environment tests (e.g. content.test.ts) have no DOM.
+if (typeof window !== 'undefined') {
+  window.scrollTo = (() => {}) as typeof window.scrollTo;
+  Element.prototype.scrollIntoView = function scrollIntoView() {};
+}

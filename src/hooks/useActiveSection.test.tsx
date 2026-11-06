@@ -45,4 +45,28 @@ describe('useActiveSection', () => {
     act(() => io.setVisibleHeights({ home: 0, about: 0, rules: 0 }));
     expect(screen.getByTestId('active')).toHaveTextContent('about');
   });
+
+  it('re-observes sections when resetKey changes (e.g. /venue → /)', () => {
+    const io = installIntersectionObserverMock();
+    function Switcher({ page }: { page: string }) {
+      const active = useActiveSection(IDS, page);
+      return (
+        <div>
+          {page === '/' && (
+            <>
+              <section id="home" />
+              <section id="about" />
+              <section id="rules" />
+            </>
+          )}
+          <output data-testid="active">{active ?? 'none'}</output>
+        </div>
+      );
+    }
+
+    const { rerender } = render(<Switcher page="/venue" />);
+    rerender(<Switcher page="/" />);
+    act(() => io.setVisibleHeights({ home: 50, about: 500 }));
+    expect(screen.getByTestId('active')).toHaveTextContent('about');
+  });
 });

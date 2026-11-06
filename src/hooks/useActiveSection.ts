@@ -5,9 +5,11 @@ const THRESHOLDS = Array.from({ length: 11 }, (_, i) => i / 10);
 
 /**
  * Scroll spy: returns the id of the section with the most visible height
- * below the sticky header. Any array of ids works; the effect re-subscribes only when the joined ids change.
+ * below the sticky header. Any array of ids works; the effect re-subscribes
+ * when the joined ids change or when `resetKey` changes (pass the current
+ * pathname so sections that mount after navigation are observed).
  */
-export function useActiveSection(ids: readonly string[]): string | undefined {
+export function useActiveSection(ids: readonly string[], resetKey?: string): string | undefined {
   const key = ids.join('|');
   const [active, setActive] = useState<string | undefined>(ids[0]);
 
@@ -40,7 +42,7 @@ export function useActiveSection(ids: readonly string[]): string | undefined {
       if (element) observer.observe(element);
     }
     return () => observer.disconnect();
-  }, [key]);
+  }, [key, resetKey]);
 
   return active;
 }
