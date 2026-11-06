@@ -28,7 +28,9 @@ export const about: AboutContent = {
       title: 'Monterrey 2027',
       paragraphs: [
         `In 2027 the championship comes to ${event.city}, an industrial and university city framed by the Sierra Madre Oriental and the unmistakable silhouette of the Cerro de la Silla.`,
-        `Host institution: ${event.host}. Venue: ${event.venue}. Dates: ${event.dates}.`,
+        `Host institution: ${event.host}.`,
+        `Venue: ${event.venue}`,
+        `Dates: ${event.dates}.`
       ],
     },
   ],

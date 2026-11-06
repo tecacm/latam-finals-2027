@@ -6,11 +6,11 @@ export const event: EventInfo = {
   shortName: 'ICPC LAC 2027',
   wordmark: { prefix: 'ICPC', accent: 'LAC', suffix: '2027' },
   city: 'Monterrey, Nuevo León, México',
-  dates: 'TBD',
-  host: 'TBD',
-  venue: 'TBD',
+  dates: 'July 17 2027',
+  host: 'Tecnológico de Monterrey',
+  venue: 'Campus Monterrey',
   // Example once known: '2027-11-12T09:00:00-06:00' (always include the offset).
-  countdownTarget: null,
+  countdownTarget: '2027-07-17T09:00:00-06:00',
   links: {
     icpc: 'https://icpc.global',
     regionalRules: 'https://icpc.global/regionals/rules',

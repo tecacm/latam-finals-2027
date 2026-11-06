@@ -54,8 +54,3 @@ to confirm text contrast still passes.
 `npm run build` produces a static `dist/` folder that works on any static host
 with no rewrite rules (it is a single page). If the site is served from a
 sub-path such as `/icpc2027/`, set `base: '/icpc2027/'` in `vite.config.ts`.
-
-## Reference
-
-A local copy of the 2026 site lives next to this repo in `../latam2026-mirror/`
-(reference only; not part of this project).

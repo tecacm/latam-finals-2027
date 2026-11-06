@@ -79,8 +79,8 @@ export default function Postcard({
           color={postmarkColor}
           style={{
             position: 'absolute',
-            right: '-10%',
-            top: '-6%',
+            right: '-15%',
+            top: '-0%',
             width: '42%',
             transform: 'rotate(14deg)',
             opacity: 0.85,
