@@ -41,9 +41,10 @@ describe('content integrity', () => {
     }
   });
 
-  it('points every nav item at a known section', () => {
-    for (const item of navItems) {
-      expect(sectionIds).toContain(item.sectionId);
+  it('points every in-page nav item at a known home section', () => {
+    for (const item of navItems.filter((i) => i.to.startsWith('/#'))) {
+      expect(sectionIds).toContain(item.to.slice(2));
+      expect(item.id).toBe(item.to.slice(2));
     }
   });
 

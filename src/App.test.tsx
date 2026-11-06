@@ -14,10 +14,11 @@ describe('App', () => {
     expect(screen.getByRole('heading', { level: 2, name: rules.heading })).toBeInTheDocument();
   });
 
-  it('has a section for every nav item', () => {
+  it('has a section for every in-page nav item', () => {
     render(<App />);
-    for (const item of navItems) {
-      expect(document.getElementById(item.sectionId), `missing #${item.sectionId}`).not.toBeNull();
+    for (const item of navItems.filter((i) => i.to.startsWith('/#'))) {
+      const id = item.to.slice(2);
+      expect(document.getElementById(id), `missing #${id}`).not.toBeNull();
     }
   });
 

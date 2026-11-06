@@ -5,3 +5,8 @@
 export function withBase(path: string, base: string = import.meta.env.BASE_URL): string {
   return base + path.replace(/^\/+/, '');
 }
+
+/** React Router basename for Vite's BASE_URL ('/' stays '/', '/icpc2027/' → '/icpc2027'). */
+export function routerBasename(base: string = import.meta.env.BASE_URL): string {
+  return base.replace(/\/+$/, '') || '/';
+}

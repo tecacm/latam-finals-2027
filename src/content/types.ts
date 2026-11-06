@@ -26,7 +26,8 @@ export type RuleEntry = {
   bullets?: string[];
 };
 
-export type NavItem = { label: string; sectionId: SectionId };
+/** A header link: `to` is a route (`/venue`) or a home-page anchor (`/#about`). */
+export type NavItem = { label: string; id: string; to: string };
 
 export type EventInfo = {
   name: string;

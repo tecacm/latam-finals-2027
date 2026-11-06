@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { postcardSrc, postcardSrcSet } from './postcardAssets';
-import { withBase } from './withBase';
+import { routerBasename, withBase } from './withBase';
 
 describe('withBase', () => {
   it('prefixes the Vite base URL', () => {
@@ -19,5 +19,12 @@ describe('postcard asset paths', () => {
     expect(postcardSrcSet('cetec')).toBe(
       `${withBase('/postcards/cetec-800.webp')} 800w, ${withBase('/postcards/cetec-1600.webp')} 1600w`,
     );
+  });
+});
+
+describe('routerBasename', () => {
+  it('maps the Vite base URL to a React Router basename', () => {
+    expect(routerBasename('/')).toBe('/');
+    expect(routerBasename('/icpc2027/')).toBe('/icpc2027');
   });
 });

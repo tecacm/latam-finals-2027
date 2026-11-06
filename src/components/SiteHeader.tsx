@@ -1,5 +1,6 @@
 import Box from '@mui/material/Box';
 import type { ReactNode } from 'react';
+import { Link as RouterLink } from 'react-router-dom';
 import type { NavItem } from '../content/types';
 import { HEADER_HEIGHT } from '../theme/layout';
 import { icpcColors, tokens } from '../theme/tokens';
@@ -31,20 +32,20 @@ export default function SiteHeader({ brand, items, activeId }: SiteHeaderProps) 
           justifyContent: 'space-between',
         }}
       >
-        <Box component="a" href="#home" sx={{ color: tokens.ink, textDecoration: 'none', fontSize: '1.1rem' }}>
+        <Box component={RouterLink} to="/#home" sx={{ color: tokens.ink, textDecoration: 'none', fontSize: '1.1rem' }}>
           {brand}
         </Box>
 
         <Box component="nav" aria-label="Main" sx={{ display: { xs: 'none', md: 'block' } }}>
           <Box component="ul" sx={{ display: 'flex', gap: 4, listStyle: 'none', m: 0, p: 0 }}>
             {items.map((item, index) => {
-              const isActive = item.sectionId === activeId;
+              const isActive = item.id === activeId;
               const color = icpcColors[index % icpcColors.length];
               return (
-                <li key={item.sectionId}>
+                <li key={item.id}>
                   <Box
-                    component="a"
-                    href={`#${item.sectionId}`}
+                    component={RouterLink}
+                    to={item.to}
                     aria-current={isActive ? 'true' : undefined}
                     sx={{
                       display: 'inline-block',

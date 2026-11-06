@@ -3,6 +3,7 @@ import IconButton from '@mui/material/IconButton';
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
 import { useState } from 'react';
+import { Link as RouterLink } from 'react-router-dom';
 import type { NavItem } from '../content/types';
 import { icpcColors, tokens } from '../theme/tokens';
 
@@ -41,12 +42,12 @@ export default function MobileNavMenu({ items, activeId }: MobileNavMenuProps) {
       >
         {items.map((item, index) => (
           <MenuItem
-            key={item.sectionId}
-            component="a"
-            href={`#${item.sectionId}`}
+            key={item.id}
+            component={RouterLink}
+            to={item.to}
             onClick={close}
-            aria-current={item.sectionId === activeId ? 'true' : undefined}
-            selected={item.sectionId === activeId}
+            aria-current={item.id === activeId ? 'true' : undefined}
+            selected={item.id === activeId}
             sx={{
               fontWeight: 700,
               color: tokens.ink,
