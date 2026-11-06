@@ -40,20 +40,20 @@ export const venue: VenueContent = {
       {
         id: 'by-air',
         title: 'By air',
-        paragraphs: ['Monterrey International Airport (MTY) is the closest airport.', 'Travel time to campus: TBD.'],
+        paragraphs: ['Monterrey International Airport (MTY) is the closest airport.', 'Travel time to campus: 50 minutes.'],
       },
       {
         id: 'around-the-city',
         title: 'Around the city',
         paragraphs: [
           'Taxis and ride-hailing apps are the simplest way to reach campus.',
-          'Recommended hotels and official transport: TBD.',
+        
         ],
       },
       {
         id: 'on-campus',
         title: 'On campus',
-        paragraphs: ['Arena Borregos is inside Campus Monterrey.', 'Entrance and arrival instructions: TBD.'],
+        paragraphs: ['Arena Borregos is inside Campus Monterrey.', ],
       },
     ],
   },
