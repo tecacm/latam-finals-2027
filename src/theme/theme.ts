@@ -21,6 +21,7 @@ export const theme = createTheme({
           scrollBehavior: 'smooth',
           '@media (prefers-reduced-motion: reduce)': { scrollBehavior: 'auto' },
         },
+        '[tabindex="-1"]:focus': { outline: 'none' },
         '::selection': { backgroundColor: tokens.yellow, color: tokens.ink },
       },
     },

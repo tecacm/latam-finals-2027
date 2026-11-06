@@ -38,7 +38,7 @@ describe('SiteHeader', () => {
   it('marks only the active item as current', () => {
     renderHeader('venue');
     const nav = screen.getAllByRole('navigation', { name: 'Main', ...HIDDEN })[0];
-    expect(within(nav).getByRole('link', { name: 'Venue', ...HIDDEN })).toHaveAttribute('aria-current', 'true');
+    expect(within(nav).getByRole('link', { name: 'Venue', ...HIDDEN })).toHaveAttribute('aria-current', 'page');
     expect(within(nav).getByRole('link', { name: 'Home', ...HIDDEN })).not.toHaveAttribute('aria-current');
   });
 
@@ -58,7 +58,7 @@ describe('SiteHeader', () => {
     renderHeader('about');
     await user.click(screen.getByRole('button', { name: 'Open navigation menu' }));
     const menu = await screen.findByRole('menu');
-    expect(within(menu).getByRole('menuitem', { name: 'About' })).toHaveAttribute('aria-current', 'true');
+    expect(within(menu).getByRole('menuitem', { name: 'About' })).toHaveAttribute('aria-current', 'location');
     expect(within(menu).getByRole('menuitem', { name: 'Home' })).not.toHaveAttribute('aria-current');
   });
 });

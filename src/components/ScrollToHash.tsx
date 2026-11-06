@@ -1,5 +1,5 @@
-import { useEffect, useRef } from 'react';
-import { useLocation } from 'react-router-dom';
+import { useEffect } from 'react';
+import { useLocation, useNavigationType } from 'react-router-dom';
 import { usePrefersReducedMotion } from '../hooks/usePrefersReducedMotion';
 
 function hashToId(hash: string): string {
@@ -11,20 +11,23 @@ function hashToId(hash: string): string {
   }
 }
 
+function focusWithoutScrolling(element: HTMLElement) {
+  if (!element.hasAttribute('tabindex')) element.setAttribute('tabindex', '-1');
+  element.focus({ preventScroll: true });
+}
+
 /**
  * After each navigation: scroll the `#hash` target into view, or jump to the
  * top when the page changed without a hash (router-aware take on HackMTY's
- * ScrollToElement). Renders nothing.
+ * ScrollToElement). Focus follows the scroll because router links cancel the
+ * native anchor behavior. Renders nothing.
  */
 export default function ScrollToHash() {
   const { pathname, hash, key } = useLocation();
   const reducedMotion = usePrefersReducedMotion();
-  const previousPathname = useRef(pathname);
+  const navigationType = useNavigationType();
 
   useEffect(() => {
-    const pathnameChanged = previousPathname.current !== pathname;
-    previousPathname.current = pathname;
-
     if (hash) {
       const id = hashToId(hash);
       // Defer one tick so the destination page has rendered and laid out.
@@ -33,12 +36,19 @@ export default function ScrollToHash() {
         if (target && typeof target.scrollIntoView === 'function') {
           target.scrollIntoView({ behavior: reducedMotion ? 'auto' : 'smooth', block: 'start' });
         }
+        if (target) focusWithoutScrolling(target);
       }, 0);
       return () => clearTimeout(timer);
     }
 
-    if (pathnameChanged) window.scrollTo(0, 0);
-  }, [pathname, hash, key, reducedMotion]);
+    // POP (initial load, back/forward) keeps the browser's scroll restoration.
+    if (navigationType !== 'POP') {
+      // Instant: the global smooth scroll-behavior would glide from the old page's position.
+      window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
+      const main = document.getElementById('main');
+      if (main) focusWithoutScrolling(main);
+    }
+  }, [pathname, hash, key, navigationType, reducedMotion]);
 
   return null;
 }

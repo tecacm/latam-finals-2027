@@ -1,8 +1,10 @@
 # ICPC Latin America Championship 2027 — website
 
 Website for the 2027 ICPC Latin America Championship in Monterrey,
-Nuevo León — a home page plus a venue page. Built with Vite, React 19, TypeScript and MUI 7 (same stack as the
-HackMTY site). Design spec: `docs/superpowers/specs/2026-11-05-icpc-lac-2027-site-design.md`.
+Nuevo León — a home page plus a venue page. Built with Vite, React 19,
+TypeScript and MUI 7 (same stack as the HackMTY site). Design specs:
+`docs/superpowers/specs/2026-11-05-icpc-lac-2027-site-design.md` and
+`docs/superpowers/specs/2026-11-05-venue-page-design.md`.
 
 ## Pages
 
@@ -13,8 +15,18 @@ HackMTY site). Design spec: `docs/superpowers/specs/2026-11-05-icpc-lac-2027-sit
 
 Routing uses React Router (`src/AppShell.tsx`). `npm run build` also copies
 `dist/index.html` to `dist/venue/index.html` (`scripts/copy-route-html.mjs`) so
-`/venue` loads directly on any static host. When adding a page, add its
-`<Route>` in `AppShell.tsx` **and** its folder name to `ROUTES` in that script.
+`/venue` loads directly.
+
+Works with no rewrite rules on static hosts that serve `folder/index.html` for
+`/folder/` (most do — Netlify, Vercel, Cloudflare Pages, GitHub Pages,
+nginx/Apache defaults). Plain S3 REST origins behind CloudFront need an
+index-document rule. Unknown paths get the host's own 404 page. `base` must be
+an absolute path with leading and trailing slashes (e.g. `/icpc2027/`, never
+`./`). Under a sub-path, the host must redirect `/icpc2027` to `/icpc2027/`
+(most do) so in-page links like `/icpc2027#about` reload correctly.
+
+When adding a page, add its `<Route>` in `AppShell.tsx` **and** its folder name
+to `ROUTES` in that script.
 
 ## Commands
 
@@ -64,9 +76,17 @@ to confirm text contrast still passes.
 
 ## Deploying
 
-`npm run build` produces a static `dist/` folder. It works on any static host
-with no rewrite rules because the build also writes `dist/venue/index.html`
-(see `scripts/copy-route-html.mjs`). Upload the whole `dist/` folder, not just
-`index.html`. Each new page needs its folder added to `ROUTES` in that script.
-If the site is served from a sub-path such as `/icpc2027/`, set
-`base: '/icpc2027/'` in `vite.config.ts`.
+`npm run build` produces a static `dist/` folder. The build also writes
+`dist/venue/index.html` (see `scripts/copy-route-html.mjs`).
+
+Works with no rewrite rules on static hosts that serve `folder/index.html` for
+`/folder/` (most do — Netlify, Vercel, Cloudflare Pages, GitHub Pages,
+nginx/Apache defaults). Plain S3 REST origins behind CloudFront need an
+index-document rule. Unknown paths get the host's own 404 page. `base` must be
+an absolute path with leading and trailing slashes (e.g. `/icpc2027/`, never
+`./`). Under a sub-path, the host must redirect `/icpc2027` to `/icpc2027/`
+(most do) so in-page links like `/icpc2027#about` reload correctly.
+
+Upload the whole `dist/` folder, not just `index.html`. Each new page needs its
+folder added to `ROUTES` in that script. If the site is served from a sub-path
+such as `/icpc2027/`, set `base: '/icpc2027/'` in `vite.config.ts`.

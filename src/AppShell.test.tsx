@@ -1,4 +1,4 @@
-import { render, screen, within } from '@testing-library/react';
+import { render, screen, waitFor, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { MemoryRouter } from 'react-router-dom';
 import { describe, expect, it } from 'vitest';
@@ -38,7 +38,7 @@ describe('AppShell venue route', () => {
     expect(screen.getByTitle(venue.location.mapTitle).tagName).toBe('IFRAME');
     expect(screen.getByRole('complementary', { name: venue.location.name })).toBeInTheDocument();
     const nav = screen.getAllByRole('navigation', { name: 'Main', hidden: true })[0];
-    expect(within(nav).getByRole('link', { name: 'Venue', hidden: true })).toHaveAttribute('aria-current', 'true');
+    expect(within(nav).getByRole('link', { name: 'Venue', hidden: true })).toHaveAttribute('aria-current', 'page');
     expect(document.title).toBe(venue.pageTitle);
   });
 
@@ -46,7 +46,7 @@ describe('AppShell venue route', () => {
     renderAt('/venue/');
     expect(screen.getByRole('heading', { level: 1, name: venue.hero.title })).toBeInTheDocument();
     const nav = screen.getAllByRole('navigation', { name: 'Main', hidden: true })[0];
-    expect(within(nav).getByRole('link', { name: 'Venue', hidden: true })).toHaveAttribute('aria-current', 'true');
+    expect(within(nav).getByRole('link', { name: 'Venue', hidden: true })).toHaveAttribute('aria-current', 'page');
   });
 
   it('renders the campus postcard and three getting-there cards', () => {
@@ -61,5 +61,27 @@ describe('AppShell venue route', () => {
     renderAt('/venue');
     await user.click(screen.getByRole('link', { name: 'ICPC LAC 2027' }));
     expect(await screen.findByRole('heading', { level: 1, name: event.name })).toBeInTheDocument();
+  });
+});
+
+describe('AppShell focus after navigation', () => {
+  it('focuses the chosen section after picking a mobile menu item (MUI does not restore focus to the hamburger)', async () => {
+    const user = userEvent.setup();
+    renderAt('/');
+    await user.click(screen.getByRole('button', { name: 'Open navigation menu' }));
+    await user.click(within(await screen.findByRole('menu')).getByRole('menuitem', { name: 'Rules' }));
+    await waitFor(() => expect(screen.queryByRole('menu')).not.toBeInTheDocument());
+    await waitFor(() => expect(document.activeElement?.id).toBe('rules'));
+  });
+
+  it('returns focus to the hamburger when the menu is dismissed with Escape', async () => {
+    const user = userEvent.setup();
+    renderAt('/');
+    const button = screen.getByRole('button', { name: 'Open navigation menu' });
+    await user.click(button);
+    await screen.findByRole('menu');
+    await user.keyboard('{Escape}');
+    await waitFor(() => expect(screen.queryByRole('menu')).not.toBeInTheDocument());
+    await waitFor(() => expect(document.activeElement).toBe(button));
   });
 });

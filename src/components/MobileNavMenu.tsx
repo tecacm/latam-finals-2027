@@ -12,9 +12,15 @@ type MobileNavMenuProps = { items: readonly NavItem[]; activeId?: string };
 /** Hamburger menu for small screens (HackMTY's IconButton + Menu pattern). */
 export default function MobileNavMenu({ items, activeId }: MobileNavMenuProps) {
   const [anchor, setAnchor] = useState<HTMLElement | null>(null);
+  // Router links move focus to the destination, so MUI must not pull it back to the hamburger
+  // after an item is chosen. Escape and backdrop dismissals still restore it.
+  const [restoreFocus, setRestoreFocus] = useState(true);
   const open = anchor !== null;
   const close = () => setAnchor(null);
-
+  const choose = () => {
+    setRestoreFocus(false);
+    close();
+  };
   return (
     <>
       <IconButton
@@ -22,7 +28,10 @@ export default function MobileNavMenu({ items, activeId }: MobileNavMenuProps) {
         aria-controls={open ? 'mobile-nav-menu' : undefined}
         aria-haspopup="true"
         aria-expanded={open ? 'true' : undefined}
-        onClick={(event) => setAnchor(event.currentTarget)}
+        onClick={(event) => {
+          setRestoreFocus(true);
+          setAnchor(event.currentTarget);
+        }}
         sx={{ color: tokens.ink }}
       >
         <MenuIcon />
@@ -32,6 +41,7 @@ export default function MobileNavMenu({ items, activeId }: MobileNavMenuProps) {
         anchorEl={anchor}
         open={open}
         onClose={close}
+        disableRestoreFocus={!restoreFocus}
         anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
         transformOrigin={{ vertical: 'top', horizontal: 'right' }}
         slotProps={{
@@ -45,8 +55,8 @@ export default function MobileNavMenu({ items, activeId }: MobileNavMenuProps) {
             key={item.id}
             component={RouterLink}
             to={item.to}
-            onClick={close}
-            aria-current={item.id === activeId ? 'true' : undefined}
+            onClick={choose}
+            aria-current={item.id === activeId ? (item.to.includes('#') ? 'location' : 'page') : undefined}
             selected={item.id === activeId}
             sx={{
               fontWeight: 700,

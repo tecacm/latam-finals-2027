@@ -11,10 +11,12 @@ function Pages() {
       <ScrollToHash />
       <Link to="/#rules">to rules</Link>
       <Link to="/venue">to venue</Link>
-      <Routes>
-        <Route path="/" element={<section id="rules">Rules</section>} />
-        <Route path="/venue" element={<p>Venue page</p>} />
-      </Routes>
+      <main id="main">
+        <Routes>
+          <Route path="/" element={<section id="rules">Rules</section>} />
+          <Route path="/venue" element={<p>Venue page</p>} />
+        </Routes>
+      </main>
     </>
   );
 }
@@ -58,6 +60,16 @@ describe('ScrollToHash', () => {
     await waitFor(() => expect(scrolled.map((s) => s.id)).toEqual(['rules']));
   });
 
+  it('moves focus to the hash target and makes it programmatically focusable', async () => {
+    render(
+      <MemoryRouter initialEntries={['/#rules']}>
+        <Pages />
+      </MemoryRouter>,
+    );
+    await waitFor(() => expect(document.activeElement?.id).toBe('rules'));
+    expect(document.getElementById('rules')).toHaveAttribute('tabindex', '-1');
+  });
+
   it('scrolls to the top when the page changes without a hash', async () => {
     const user = userEvent.setup();
     render(
@@ -67,7 +79,30 @@ describe('ScrollToHash', () => {
     );
     await user.click(screen.getByRole('link', { name: 'to venue' }));
     expect(await screen.findByText('Venue page')).toBeInTheDocument();
-    expect(window.scrollTo).toHaveBeenCalledWith(0, 0);
+    expect(window.scrollTo).toHaveBeenCalledWith({ top: 0, left: 0, behavior: 'instant' });
+    expect(document.activeElement).toBe(document.getElementById('main'));
+  });
+
+  it('does not touch scroll position on a first load without a hash (POP)', async () => {
+    render(
+      <MemoryRouter initialEntries={['/venue']}>
+        <Pages />
+      </MemoryRouter>,
+    );
+    expect(await screen.findByText('Venue page')).toBeInTheDocument();
+    expect(window.scrollTo).not.toHaveBeenCalled();
+  });
+
+  it('scrolls to the top when re-navigating to the current page', async () => {
+    const user = userEvent.setup();
+    render(
+      <MemoryRouter initialEntries={['/venue']}>
+        <Pages />
+      </MemoryRouter>,
+    );
+    await user.click(screen.getByRole('link', { name: 'to venue' }));
+    expect(window.scrollTo).toHaveBeenCalledTimes(1);
+    expect(window.scrollTo).toHaveBeenCalledWith({ top: 0, left: 0, behavior: 'instant' });
   });
 
   it('jumps without animation under reduced motion', async () => {

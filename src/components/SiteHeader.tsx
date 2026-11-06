@@ -46,7 +46,7 @@ export default function SiteHeader({ brand, items, activeId }: SiteHeaderProps) 
                   <Box
                     component={RouterLink}
                     to={item.to}
-                    aria-current={isActive ? 'true' : undefined}
+                    aria-current={isActive ? (item.to.includes('#') ? 'location' : 'page') : undefined}
                     sx={{
                       display: 'inline-block',
                       py: 0.5,
