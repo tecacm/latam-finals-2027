@@ -3,6 +3,7 @@
 import { existsSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 import { describe, expect, it, vi } from 'vitest';
+import { googleMapsEmbedUrl, googleMapsSearchUrl } from '../lib/maps';
 import { POSTCARD_WIDTHS } from '../lib/postcardAssets';
 import { about } from './about';
 import { event } from './event';
@@ -10,6 +11,7 @@ import { hero } from './hero';
 import { navItems, sectionIds } from './nav';
 import { getPostcard, postcards } from './postcards';
 import { rules } from './rules';
+import { venue } from './venue';
 
 const postcardDir = fileURLToPath(new URL('../../public/postcards/', import.meta.url));
 
@@ -58,6 +60,19 @@ describe('content integrity', () => {
   it('uses absolute https links', () => {
     expect(event.links.icpc).toMatch(/^https:\/\//);
     expect(event.links.regionalRules).toMatch(/^https:\/\//);
+  });
+
+  it('points every page nav item at a known route', () => {
+    for (const item of navItems.filter((i) => !i.to.startsWith('/#'))) {
+      expect(['/venue']).toContain(item.to);
+    }
+  });
+
+  it('gives the venue a real postcard and https map links', () => {
+    expect(Object.hasOwn(postcards, venue.campus.postcardId)).toBe(true);
+    expect(googleMapsEmbedUrl(venue.location.mapQuery)).toMatch(/^https:\/\//);
+    expect(googleMapsSearchUrl(venue.location.mapQuery)).toMatch(/^https:\/\//);
+    expect(venue.travel.cards).toHaveLength(3);
   });
 });
 

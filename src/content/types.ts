@@ -56,3 +56,22 @@ export type RulesContent = {
 };
 
 export type FooterContent = { copyright: string; links: { label: string; href: string }[] };
+
+export type VenueContent = {
+  pageTitle: string;
+  hero: { eyebrow: string; title: string; subtitle: string; datesLine: string };
+  campus: { eyebrow: string; heading: string; paragraphs: string[]; postcardId: string };
+  location: {
+    eyebrow: string;
+    heading: string;
+    cardEyebrow: string;
+    name: string;
+    addressLines: string[];
+    coordinates: string;
+    rows: { label: string; value: string }[];
+    mapQuery: string;
+    mapTitle: string;
+    ctaLabel: string;
+  };
+  travel: { eyebrow: string; heading: string; cards: { id: string; title: string; paragraphs: string[] }[] };
+};

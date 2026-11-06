@@ -1,8 +1,10 @@
-import { render, screen } from '@testing-library/react';
+import { render, screen, within } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import { MemoryRouter } from 'react-router-dom';
 import { describe, expect, it } from 'vitest';
 import AppShell from './AppShell';
 import { event } from './content/event';
+import { venue } from './content/venue';
 
 function renderAt(path: string) {
   return render(
@@ -26,5 +28,38 @@ describe('AppShell', () => {
   it('links the brand to the home hero', () => {
     renderAt('/');
     expect(screen.getByRole('link', { name: 'ICPC LAC 2027' })).toHaveAttribute('href', '/#home');
+  });
+});
+
+describe('AppShell venue route', () => {
+  it('renders the venue page with map, location card and current nav item', () => {
+    renderAt('/venue');
+    expect(screen.getByRole('heading', { level: 1, name: venue.hero.title })).toBeInTheDocument();
+    expect(screen.getByTitle(venue.location.mapTitle).tagName).toBe('IFRAME');
+    expect(screen.getByRole('complementary', { name: venue.location.name })).toBeInTheDocument();
+    const nav = screen.getAllByRole('navigation', { name: 'Main', hidden: true })[0];
+    expect(within(nav).getByRole('link', { name: 'Venue', hidden: true })).toHaveAttribute('aria-current', 'true');
+    expect(document.title).toBe(venue.pageTitle);
+  });
+
+  it('treats /venue/ like /venue', () => {
+    renderAt('/venue/');
+    expect(screen.getByRole('heading', { level: 1, name: venue.hero.title })).toBeInTheDocument();
+    const nav = screen.getAllByRole('navigation', { name: 'Main', hidden: true })[0];
+    expect(within(nav).getByRole('link', { name: 'Venue', hidden: true })).toHaveAttribute('aria-current', 'true');
+  });
+
+  it('renders the campus postcard and three getting-there cards', () => {
+    renderAt('/venue');
+    expect(screen.getByRole('heading', { level: 2, name: venue.campus.heading })).toBeInTheDocument();
+    expect(screen.getAllByRole('img').length).toBeGreaterThan(0);
+    expect(screen.getAllByRole('article')).toHaveLength(venue.travel.cards.length);
+  });
+
+  it('goes back to the home page from the venue page via the brand link', async () => {
+    const user = userEvent.setup();
+    renderAt('/venue');
+    await user.click(screen.getByRole('link', { name: 'ICPC LAC 2027' }));
+    expect(await screen.findByRole('heading', { level: 1, name: event.name })).toBeInTheDocument();
   });
 });

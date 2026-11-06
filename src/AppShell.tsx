@@ -10,13 +10,15 @@ import { footer } from './content/footer';
 import { navItems, sectionIds } from './content/nav';
 import { useActiveSection } from './hooks/useActiveSection';
 import HomePage from './pages/HomePage';
+import VenuePage from './pages/VenuePage';
 import { theme } from './theme/theme';
 
 /** Layout + routes. Needs router context: App provides BrowserRouter, tests MemoryRouter. */
 export default function AppShell() {
   const { pathname } = useLocation();
   const page = pathname.replace(/\/+$/, '') || '/';
-  const activeId = useActiveSection(sectionIds, page);
+  const sectionId = useActiveSection(sectionIds, page);
+  const activeId = page === '/venue' ? 'venue' : sectionId;
 
   return (
     <ThemeProvider theme={theme}>
@@ -29,6 +31,7 @@ export default function AppShell() {
       />
       <Routes>
         <Route path="/" element={<HomePage />} />
+        <Route path="/venue" element={<VenuePage />} />
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
       <Footer copyright={footer.copyright} links={footer.links} />
