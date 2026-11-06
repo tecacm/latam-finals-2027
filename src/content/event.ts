@@ -13,6 +13,7 @@ export const event: EventInfo = {
   countdownTarget: '2027-07-17T10:00:00-06:00',
   links: {
     icpc: 'https://icpc.global',
+    tec: 'https:www.tec.mx/en',
     regionalRules: 'https://icpc.global/regionals/rules',
   },
 };
