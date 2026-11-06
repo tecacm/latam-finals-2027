@@ -4,6 +4,18 @@ Single-page site for the 2027 ICPC Latin America Championship in Monterrey,
 Nuevo León. Built with Vite, React 19, TypeScript and MUI 7 (same stack as the
 HackMTY site). Design spec: `docs/superpowers/specs/2026-11-05-icpc-lac-2027-site-design.md`.
 
+## Pages
+
+| URL | Page |
+|---|---|
+| `/` | Home: hero, About (`/#about`), Rules (`/#rules`) |
+| `/venue` | Venue: Arena Borregos at Tecnológico de Monterrey, Campus Monterrey |
+
+Routing uses React Router (`src/AppShell.tsx`). `npm run build` also copies
+`dist/index.html` to `dist/venue/index.html` (`scripts/copy-route-html.mjs`) so
+`/venue` loads directly on any static host. When adding a page, add its
+`<Route>` in `AppShell.tsx` **and** its folder name to `ROUTES` in that script.
+
 ## Commands
 
 ```bash
@@ -26,6 +38,7 @@ All text lives in `src/content/`:
 | `hero.ts` | Hero eyebrow and hero postcard. |
 | `about.ts` | About blocks (title, paragraphs, optional postcard). |
 | `rules.ts` | Rules intro and accordion entries. |
+| `venue.ts` | Venue page: hero, campus text, address/map, getting-there cards. |
 | `footer.ts` | Footer copyright and links. |
 
 Find remaining placeholders with `grep -rn "TBD" src/content`.
