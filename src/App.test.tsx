@@ -10,6 +10,7 @@ describe('App', () => {
   it('renders the hero, About and Rules on one page', () => {
     render(<App />);
     expect(screen.getByRole('heading', { level: 1, name: event.name })).toBeInTheDocument();
+    expect(screen.getByRole('img', { name: `${event.name} logo` })).toBeInTheDocument();
     expect(screen.getByRole('heading', { level: 2, name: about.heading })).toBeInTheDocument();
     expect(screen.getByRole('heading', { level: 2, name: rules.heading })).toBeInTheDocument();
   });

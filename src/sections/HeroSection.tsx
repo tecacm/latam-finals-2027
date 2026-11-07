@@ -7,12 +7,22 @@ import Section from '../components/Section';
 import { event } from '../content/event';
 import { hero } from '../content/hero';
 import { getPostcard } from '../content/postcards';
+import { withBase } from '../lib/withBase';
 import { fonts, icpcColors, tokens } from '../theme/tokens';
 
 export default function HeroSection() {
   const postcard = getPostcard(hero.postcardId);
   return (
     <Section id="home" labelledBy="home-title">
+      {/* Outside the balloon box so the logo doesn't change the box height the balloon positions are measured against. */}
+      <Box
+        component="img"
+        src={withBase('/icpc2027lac.png')}
+        alt={`${event.name} logo`}
+        width={1495}
+        height={966}
+        sx={{ display: 'block', mx: 'auto', mb: { xs: 0, lg: 3 }, width: { xs: '75%', sm: 380, md: 480 }, maxWidth: '100%', height: 'auto' }}
+      />
       <Box sx={{ position: 'relative', textAlign: 'center', px: 2, pt: { xs: 7, md: 10, lg: 0 }, maxWidth: 1100, mx: 'auto' }}>
         <BalloonCluster colors={icpcColors} />
         <Typography
